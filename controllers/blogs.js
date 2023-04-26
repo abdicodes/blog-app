@@ -45,11 +45,15 @@ router.put('/:id', blogFinder, async (req, res) => {
   }
 });
 
-router.delete('/:id', blogFinder, async (req, res) => {
+router.delete('/:id', blogFinder, userExtractor, async (req, res) => {
+  const user = req.user;
   const blog = await Blog.findByPk(req.params.id);
-  if (blog) {
-    blog.destroy();
-    res.status(204).end();
+  if (blog && user) {
+    if (blog.userId == user.id) {
+      blog.destroy();
+      res.status(204).end();
+    }
+    res.status(401).end();
   } else {
     res.status(404).end();
   }
