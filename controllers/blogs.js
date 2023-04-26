@@ -30,7 +30,7 @@ router.get('/', async (req, res) => {
     };
   }
 
-  const notes = await Blog.findAll({
+  const blogs = await Blog.findAll({
     attributes: { exclude: ['id', 'userId'] },
     include: {
       model: User,
@@ -42,7 +42,7 @@ router.get('/', async (req, res) => {
       ['likes', 'DESC'],
     ],
   });
-  res.json(notes);
+  res.json(blogs);
 });
 
 router.get('/:id', blogFinder, async (req, res) => {
