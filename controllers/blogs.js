@@ -1,6 +1,8 @@
 const router = require('express').Router();
+const middleware = require('../utils/middleware');
 
-const { Blog } = require('../models');
+const { Blog, User } = require('../models');
+const { userExtractor } = require('../utils/middleware');
 
 const blogFinder = async (req, res, next) => {
   req.blog = await Blog.findByPk(req.params.id);
@@ -8,7 +10,13 @@ const blogFinder = async (req, res, next) => {
 };
 
 router.get('/', async (req, res) => {
-  const notes = await Blog.findAll();
+  const notes = await Blog.findAll({
+    attributes: { exclude: ['id', 'userId'] },
+    include: {
+      model: User,
+      attributes: ['name'],
+    },
+  });
   res.json(notes);
 });
 
@@ -20,9 +28,9 @@ router.get('/:id', blogFinder, async (req, res) => {
   }
 });
 
-router.post('/', blogFinder, async (req, res) => {
+router.post('/', middleware.userExtractor, async (req, res) => {
   if (!req.body.url || !req.body.title) res.status(400);
-  const blog = await Blog.create(req.body);
+  const blog = await Blog.create({ ...req.body, userId: req.user.id });
   return res.json(blog);
 });
 
