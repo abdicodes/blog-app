@@ -45,6 +45,14 @@ module.exports = {
         type: DataTypes.TEXT,
         allowNull: false,
       },
+      year: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        validate: {
+          min: 1994,
+          max: new Date().getFullYear(),
+        },
+      },
       author: {
         type: DataTypes.TEXT,
       },
