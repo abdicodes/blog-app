@@ -1,5 +1,4 @@
 const { DataTypes } = require('sequelize');
-const { sequelize } = require('../utils/db');
 
 module.exports = {
   up: async ({ context: queryInterface }) => {
@@ -56,12 +55,12 @@ module.exports = {
       created_at: {
         type: DataTypes.DATE,
         allowNull: false,
-        defaultValue: sequelize.literal('NOW()'),
+        defaultValue: DataTypes.NOW,
       },
       updated_at: {
         type: DataTypes.DATE,
         allowNull: false,
-        defaultValue: sequelize.literal('NOW()'),
+        defaultValue: DataTypes.NOW,
       },
     }),
       await queryInterface.addColumn('blogs', 'user_id', {
