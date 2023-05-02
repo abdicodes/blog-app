@@ -6,26 +6,6 @@ const { Op } = require('sequelize');
 const sequelize = require('sequelize');
 
 router.get('/', async (req, res) => {
-  // let where = {};
-
-  // if (req.query.search) {
-  //   where = {
-  //     ...where,
-  //     [Op.or]: [
-  //       {
-  //         title: {
-  //           [Op.substring]: req.query.search,
-  //         },
-  //       },
-  //       {
-  //         author: {
-  //           [Op.substring]: req.query.search,
-  //         },
-  //       },
-  //     ],
-  //   };
-  // }
-
   const blogs = await Blog.findAll({
     attributes: [
       'author',

@@ -1,7 +1,7 @@
 const logger = require('./logger');
 const { SECRET } = require('../utils/config');
 const jwt = require('jsonwebtoken');
-const User = require('../models/user');
+const { User, ActiveSession } = require('../models/');
 
 const requestLogger = (request, response, next) => {
   logger.info('Method:', request.method);
@@ -25,7 +25,16 @@ const userExtractor = async (req, res, next) => {
     return res.status(401).json({ error: 'token missing or invalid' });
   }
   req.user = await User.findByPk(decodedToken.id);
-  console.log(req.user);
+
+  const session = await ActiveSession.findOne({
+    where: {
+      token: req.token,
+    },
+  });
+
+  if (!session) {
+    return res.status(401).json({ error: 'token has expired' });
+  }
 
   next();
 };
